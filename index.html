@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIS An-Nur Tanjungpinang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep:   #0d3d2c;
+    --green-mid:    #1a5c42;
+    --green-light:  #2a7a58;
+    --green-subtle: #e8f4ef;
+    --gold:         #c9a84c;
+    --gold-light:   #e8c97a;
+    --gold-pale:    #fdf6e3;
+    --white:        #ffffff;
+    --off-white:    #fafaf8;
+    --text-dark:    #0d1f18;
+    --text-mid:     #3d5a4e;
+    --text-light:   #6b8a7a;
+    --border:       rgba(201,168,76,0.2);
+    --shadow-gold:  0 20px 60px rgba(201,168,76,0.15);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; font-size:16px; }
+  body {
+    font-family:'Plus Jakarta Sans', sans-serif;
+    background:var(--off-white);
+    color:var(--text-dark);
+    overflow-x:hidden;
+    cursor:none;
+  }
+
+  /* ── Custom Cursor ── */
+  .cursor {
+    width:10px; height:10px; background:var(--gold); border-radius:50%;
+    position:fixed; top:0; left:0; pointer-events:none; z-index:9999;
+    transition:transform 0.15s ease; mix-blend-mode:multiply;
+  }
+  .cursor-ring {
+    width:36px; height:36px; border:1.5px solid var(--gold); border-radius:50%;
+    position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+    transition:transform 0.4s cubic-bezier(0.23,1,0.32,1), width 0.3s, height 0.3s, border-color 0.3s;
+  }
+  .cursor-ring.hover { width:60px; height:60px; border-color:var(--green-mid); }
+  .cursor.click { transform:scale(2.5); }
+
+  /* ════════════════════════════════
+     NAVBAR
+  ════════════════════════════════ */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:1000;
+    padding:0 5vw; display:flex; align-items:center; justify-content:space-between;
+    height:68px; transition:background 0.5s, box-shadow 0.5s;
+  }
+  /* Logo */
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo-icon {
+    width:40px; height:40px; flex-shrink:0;
+    background:linear-gradient(135deg, var(--green-mid), var(--green-deep));
+    border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:18px; box-shadow:0 4px 12px rgba(13,61,44,0.3);
+  }
+  .nav-logo-text { line-height:1.1; }
+  .nav-logo-name {
+    display:block; font-family:'Cormorant Garamond', serif;
+    font-size:1.05rem; font-weight:700;
+    color:var(--white); transition:color 0.4s;    /* WHITE on hero */
+  }
+  .nav-logo-sub {
+    display:block; font-size:0.65rem; font-weight:500;
+    letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--gold-light); transition:color 0.4s;  /* pale gold on hero */
+  }
+  /* Links — white on hero */
+  .nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+  .nav-links a {
+    font-size:0.82rem; font-weight:500; letter-spacing:0.04em;
+    color:rgba(255,255,255,0.85); text-decoration:none;
+    position:relative; padding-bottom:3px; transition:color 0.3s;
+  }
+  .nav-links a::after {
+    content:''; position:absolute; bottom:0; left:0;
+    width:0; height:1.5px; background:var(--gold-light); transition:width 0.3s;
+  }
+  .nav-links a:hover { color:var(--white); }
+  .nav-links a:hover::after { width:100%; }
+  /* CTA ghost on hero */
+  .nav-cta {
+    background:rgba(255,255,255,0.12) !important;
+    border:1px solid rgba(255,255,255,0.35) !important;
+    color:var(--white) !important; padding:9px 22px !important;
+    border-radius:50px !important; font-size:0.82rem !important;
+    font-weight:600 !important; letter-spacing:0.05em !important;
+    text-transform:uppercase !important; backdrop-filter:blur(8px);
+    transition:background 0.3s, transform 0.3s !important;
+  }
+  .nav-cta::after { display:none !important; }
+  .nav-cta:hover { background:rgba(255,255,255,0.22) !important; transform:translateY(-2px) !important; color:var(--white) !important; }
+  /* Hamburger — white on hero */
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:8px; }
+  .hamburger span { width:24px; height:2px; background:var(--white); border-radius:2px; transition:all 0.3s; display:block; }
+  .hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+  .hamburger.open span:nth-child(2) { opacity:0; }
+  .hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+
+  /* ── SCROLLED (white bg, dark text) ── */
+  nav.scrolled {
+    background:rgba(255,255,255,0.95); backdrop-filter:blur(20px);
+    box-shadow:0 1px 0 var(--border), 0 8px 30px rgba(13,61,44,0.08);
+  }
+  nav.scrolled .nav-logo-name { color:var(--green-deep); }
+  nav.scrolled .nav-logo-sub  { color:var(--gold); }
+  nav.scrolled .nav-links a   { color:var(--text-mid); }
+  nav.scrolled .nav-links a::after { background:var(--gold); }
+  nav.scrolled .nav-links a:hover  { color:var(--green-deep); }
+  nav.scrolled .hamburger span     { background:var(--green-deep); }
+  nav.scrolled .nav-cta {
+    background:linear-gradient(135deg, var(--green-mid), var(--green-deep)) !important;
+    border:none !important; box-shadow:0 4px 15px rgba(13,61,44,0.3) !important;
+  }
+  nav.scrolled .nav-cta:hover { box-shadow:0 8px 25px rgba(13,61,44,0.4) !important; }
+
+  /* ── PAGE-NAV (pendaftaran page, always dark) ── */
+  nav.page-nav {
+    background:rgba(255,255,255,0.97); backdrop-filter:blur(20px);
+    box-shadow:0 1px 0 var(--border), 0 8px 30px rgba(13,61,44,0.08);
+  }
+  nav.page-nav .nav-logo-name { color:var(--green-deep); }
+  nav.page-nav .nav-logo-sub  { color:var(--gold); }
+  nav.page-nav .nav-links a   { color:var(--text-mid); }
+  nav.page-nav .nav-links a::after { background:var(--gold); }
+  nav.page-nav .nav-links a:hover  { color:var(--green-deep); }
+  nav.page-nav .hamburger span     { background:var(--green-deep); }
+  nav.page-nav .nav-cta {
+    background:linear-gradient(135deg, var(--green-mid), var(--green-deep)) !important;
+    border:none !important; box-shadow:0 4px 15px rgba(13,61,44,0.3) !important;
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display:none; position:fixed; top:68px; left:0; right:0;
+    background:rgba(255,255,255,0.97); backdrop-filter:blur(20px);
+    padding:24px 5vw 32px; border-bottom:1px solid var(--border);
+    z-index:999; transform:translateY(-20px); opacity:0;
+    transition:transform 0.4s, opacity 0.4s;
+  }
+  .mobile-menu.open { transform:translateY(0); opacity:1; display:block; }
+  .mobile-menu a {
+    display:block; padding:14px 0; border-bottom:1px solid rgba(0,0,0,0.06);
+    font-size:1rem; font-weight:500; color:var(--text-dark); text-decoration:none;
+  }
+  .mobile-menu .m-cta {
+    display:block; margin-top:20px; text-align:center;
+    background:linear-gradient(135deg, var(--green-mid), var(--green-deep));
+    color:var(--white) !important; padding:14px; border-radius:50px;
+    font-weight:600; letter-spacing:0.05em; text-transform:uppercase; font-size:0.85rem;
+  }
+
+  /* ════════════════════════════════
+     SHARED SECTION STYLES
+  ════════════════════════════════ */
+  section { padding:100px 5vw; }
+  .section-label {
+    display:inline-flex; align-items:center; gap:10px;
+    font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:20px;
+  }
+  .section-label::before { content:''; width:30px; height:1px; background:var(--gold); }
+  .section-title {
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(2rem,4.5vw,3.5rem); font-weight:600; line-height:1.15;
+    color:var(--green-deep); margin-bottom:20px;
+  }
+  .section-body { font-size:1rem; line-height:1.8; color:var(--text-mid); max-width:560px; font-weight:300; }
+
+  /* ════════════════════════════════
+     HERO
+  ════════════════════════════════ */
+  #beranda {
+    min-height:100vh;
+    background:linear-gradient(165deg, var(--green-deep) 0%, #0a2d1f 50%, #071a12 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:120px 5vw 80px; position:relative; overflow:hidden;
+  }
+  .hero-pattern {
+    position:absolute; inset:0; pointer-events:none;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(42,122,88,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 60% 80%, rgba(201,168,76,0.05) 0%, transparent 40%);
+  }
+  .hero-grid {
+    position:absolute; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.3);
+    padding:7px 18px; border-radius:50px;
+    font-size:0.72rem; font-weight:600; letter-spacing:0.12em;
+    color:var(--gold-light); text-transform:uppercase; margin-bottom:32px;
+    animation:fadeUp 0.8s ease both;
+  }
+  .hero-badge::before { content:'✦'; font-size:0.6rem; }
+  .hero-title {
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(2.8rem,7vw,6.5rem); font-weight:300;
+    color:var(--white); line-height:1.05; letter-spacing:-0.01em;
+    margin-bottom:8px; animation:fadeUp 0.8s 0.15s ease both;
+  }
+  .hero-title em { font-style:italic; color:var(--gold-light); font-weight:400; }
+  .hero-title .title-school { display:block; font-weight:600; font-size:clamp(3rem,8vw,7.5rem); letter-spacing:-0.02em; }
+  .hero-subtitle {
+    font-size:clamp(0.9rem,2vw,1.1rem); color:rgba(255,255,255,0.55);
+    font-weight:300; letter-spacing:0.06em; margin-bottom:48px;
+    animation:fadeUp 0.8s 0.3s ease both;
+  }
+  .hero-subtitle strong { color:rgba(255,255,255,0.8); font-weight:500; }
+  .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; animation:fadeUp 0.8s 0.45s ease both; }
+  .btn-primary {
+    background:linear-gradient(135deg, var(--gold), #b8913e); color:var(--green-deep);
+    padding:15px 36px; border-radius:50px; font-size:0.85rem; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase; text-decoration:none;
+    box-shadow:0 8px 30px rgba(201,168,76,0.4);
+    transition:transform 0.3s, box-shadow 0.3s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary:hover { transform:translateY(-3px); box-shadow:0 15px 40px rgba(201,168,76,0.5); }
+  .btn-secondary {
+    background:transparent; border:1px solid rgba(255,255,255,0.25);
+    color:var(--white); padding:15px 36px; border-radius:50px;
+    font-size:0.85rem; font-weight:500; letter-spacing:0.06em;
+    text-decoration:none; transition:background 0.3s, border-color 0.3s; backdrop-filter:blur(8px);
+  }
+  .btn-secondary:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.5); }
+  .hero-stats {
+    position:absolute; bottom:48px; left:50%; transform:translateX(-50%);
+    display:flex; gap:48px; animation:fadeUp 0.8s 0.6s ease both;
+  }
+  .stat { text-align:center; }
+  .stat-num { display:block; font-family:'Cormorant Garamond', serif; font-size:2rem; font-weight:600; color:var(--gold-light); line-height:1; }
+  .stat-label { font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; margin-top:4px; display:block; color:rgba(255,255,255,0.5); }
+  .scroll-hint {
+    position:absolute; bottom:140px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    animation:bounce 2s infinite;
+  }
+  .scroll-hint span { font-size:0.65rem; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; }
+  .scroll-line { width:1px; height:40px; background:linear-gradient(to bottom, rgba(201,168,76,0.6), transparent); }
+
+  /* ════════════════════════════════
+     PROFIL
+  ════════════════════════════════ */
+  #profil { background:var(--white); }
+  .profil-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .profil-card {
+    background:linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    border-radius:24px; padding:48px; color:var(--white); position:relative; overflow:hidden;
+  }
+  .profil-card::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:rgba(201,168,76,0.12); border-radius:50%; }
+  .profil-card-icon { font-size:3.5rem; margin-bottom:24px; display:block; }
+  .profil-card h3 { font-family:'Cormorant Garamond', serif; font-size:1.6rem; font-weight:600; margin-bottom:12px; }
+  .profil-card p  { font-size:0.9rem; line-height:1.7; color:rgba(255,255,255,0.75); font-weight:300; }
+  .profil-badge {
+    position:absolute; bottom:-20px; right:32px;
+    background:linear-gradient(135deg, var(--gold), #b8913e);
+    border-radius:16px; padding:16px 24px; box-shadow:0 10px 30px rgba(201,168,76,0.35);
+  }
+  .profil-badge span:first-child { display:block; font-family:'Cormorant Garamond', serif; font-size:1.8rem; font-weight:700; color:var(--green-deep); line-height:1; }
+  .profil-badge span:last-child  { font-size:0.65rem; font-weight:600; color:var(--green-deep); letter-spacing:0.08em; text-transform:uppercase; opacity:0.7; }
+  .profil-items { margin-top:32px; display:flex; flex-direction:column; gap:16px; }
+  .profil-item {
+    display:flex; gap:16px; align-items:flex-start; padding:20px; border-radius:16px;
+    background:var(--off-white); border:1px solid rgba(0,0,0,0.05);
+    transition:transform 0.3s, box-shadow 0.3s;
+  }
+  .profil-item:hover { transform:translateX(6px); box-shadow:var(--shadow-gold); }
+  .profil-item-icon { width:44px; height:44px; border-radius:12px; flex-shrink:0; background:var(--green-subtle); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+  .profil-item h4 { font-size:0.9rem; font-weight:600; color:var(--green-deep); margin-bottom:4px; }
+  .profil-item p  { font-size:0.82rem; color:var(--text-light); line-height:1.5; font-weight:300; }
+
+  /* ════════════════════════════════
+     VISI MISI
+  ════════════════════════════════ */
+  #visimisi { background:linear-gradient(160deg, var(--green-deep) 0%, #0a2a1c 100%); position:relative; overflow:hidden; }
+  #visimisi::before { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 70% 30%, rgba(201,168,76,0.07) 0%, transparent 50%); }
+  .visimisi-inner { max-width:1200px; margin:0 auto; }
+  .visimisi-header { text-align:center; margin-bottom:72px; }
+  .visimisi-header .section-label { justify-content:center; }
+  .visimisi-header .section-label::before { display:none; }
+  .visimisi-header .section-title { color:var(--white); }
+  .vm-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  .vm-card {
+    background:rgba(255,255,255,0.06); border:1px solid rgba(201,168,76,0.2);
+    border-radius:24px; padding:48px; backdrop-filter:blur(10px);
+    transition:background 0.3s, transform 0.3s;
+  }
+  .vm-card:hover { background:rgba(255,255,255,0.09); transform:translateY(-4px); }
+  .vm-icon { width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg, var(--gold), #b8913e); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:28px; }
+  .vm-card h3 { font-family:'Cormorant Garamond', serif; font-size:1.8rem; font-weight:600; color:var(--gold-light); margin-bottom:16px; }
+  .vm-card p  { font-size:0.9rem; line-height:1.8; color:rgba(255,255,255,0.65); font-weight:300; }
+  .vm-misi-list { list-style:none; display:flex; flex-direction:column; gap:14px; margin-top:4px; }
+  .vm-misi-list li { display:flex; gap:12px; align-items:flex-start; font-size:0.88rem; line-height:1.6; color:rgba(255,255,255,0.65); font-weight:300; }
+  .vm-misi-list li::before { content:'✦'; color:var(--gold); flex-shrink:0; margin-top:2px; font-size:0.6rem; }
+
+  /* ════════════════════════════════
+     PROGRAM
+  ════════════════════════════════ */
+  #program { background:var(--off-white); }
+  .program-inner { max-width:1200px; margin:0 auto; }
+  .program-header { text-align:center; margin-bottom:64px; }
+  .program-header .section-body { margin:0 auto; }
+  .program-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .prog-card {
+    background:var(--white); border-radius:20px; padding:36px;
+    border:1px solid rgba(0,0,0,0.06);
+    transition:transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
+    position:relative; overflow:hidden;
+  }
+  .prog-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--green-mid), var(--gold));
+    transform:scaleX(0); transform-origin:left; transition:transform 0.4s;
+  }
+  .prog-card:hover { transform:translateY(-8px); box-shadow:0 24px 60px rgba(13,61,44,0.12); }
+  .prog-card:hover::before { transform:scaleX(1); }
+  .prog-emoji { font-size:2.5rem; margin-bottom:20px; display:block; }
+  .prog-card h3 { font-family:'Cormorant Garamond', serif; font-size:1.3rem; font-weight:600; color:var(--green-deep); margin-bottom:10px; }
+  .prog-card p  { font-size:0.85rem; line-height:1.7; color:var(--text-light); font-weight:300; }
+  .prog-tag {
+    display:inline-block; margin-top:20px;
+    font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--gold); background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2);
+    padding:5px 12px; border-radius:50px;
+  }
+
+  /* ════════════════════════════════
+     KEGIATAN
+  ════════════════════════════════ */
+  #kegiatan { background:var(--white); }
+  .kegiatan-inner { max-width:1200px; margin:0 auto; }
+  .kegiatan-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:52px; flex-wrap:wrap; gap:24px; }
+  .kegiatan-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+  .keg-card { border-radius:20px; overflow:hidden; position:relative; aspect-ratio:16/9; background:var(--green-deep); cursor:pointer; transition:transform 0.4s; }
+  .keg-card:hover { transform:scale(0.98); }
+  .keg-card.big { grid-row:span 2; aspect-ratio:auto; min-height:400px; }
+  .keg-bg { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:4rem; transition:transform 0.5s; }
+  .keg-card:hover .keg-bg { transform:scale(1.1); }
+  .keg-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(13,61,44,0.95) 0%, rgba(13,61,44,0.2) 60%, transparent 100%);
+    display:flex; flex-direction:column; justify-content:flex-end; padding:28px;
+  }
+  .keg-tag { font-size:0.62rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-light); margin-bottom:8px; }
+  .keg-overlay h3 { font-family:'Cormorant Garamond', serif; font-size:1.4rem; font-weight:600; color:var(--white); margin-bottom:6px; }
+  .keg-overlay p  { font-size:0.8rem; color:rgba(255,255,255,0.6); font-weight:300; line-height:1.5; }
+
+  /* ════════════════════════════════
+     CONTACT + FOOTER
+  ════════════════════════════════ */
+  .contact-strip { background:var(--green-deep); padding:48px 5vw; }
+  .contact-inner { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:32px; }
+  .contact-info h3 { font-family:'Cormorant Garamond', serif; font-size:1.8rem; color:var(--white); margin-bottom:8px; }
+  .contact-info p  { color:rgba(255,255,255,0.55); font-size:0.85rem; font-weight:300; line-height:1.6; }
+  .contact-items   { display:flex; gap:32px; flex-wrap:wrap; }
+  .contact-item    { display:flex; gap:12px; align-items:center; }
+  .contact-item-icon { width:40px; height:40px; border-radius:10px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.2); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  .contact-item-text { font-size:0.82rem; color:rgba(255,255,255,0.7); font-weight:300; }
+  .contact-item-text strong { display:block; color:var(--white); font-weight:500; margin-bottom:2px; }
+  footer { background:#040f0a; padding:32px 5vw; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .footer-brand { font-family:'Cormorant Garamond', serif; font-size:1.1rem; color:rgba(255,255,255,0.4); }
+  .footer-brand em { color:var(--gold); font-style:normal; }
+  .footer-copy { font-size:0.72rem; color:rgba(255,255,255,0.25); letter-spacing:0.05em; }
+
+  /* ════════════════════════════════
+     HALAMAN PENDAFTARAN
+  ════════════════════════════════ */
+  #page-pendaftaran { display:none; }
+
+  .reg-hero {
+    min-height:52vh;
+    background:linear-gradient(165deg, var(--green-deep) 0%, #0a2d1f 50%, #071a12 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:120px 5vw 72px; position:relative; overflow:hidden;
+  }
+  .reg-back {
+    position:absolute; top:84px; left:5vw;
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.22);
+    color:rgba(255,255,255,0.85); padding:10px 20px; border-radius:50px;
+    font-size:0.82rem; font-weight:500; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Plus Jakarta Sans', sans-serif;
+    transition:background 0.3s, color 0.3s;
+  }
+  .reg-back:hover { background:rgba(255,255,255,0.2); color:var(--white); }
+  .reg-hero-inner { animation:fadeUp 0.7s ease both; }
+  .reg-hero-title {
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(2.6rem,6vw,5.5rem); font-weight:300; color:var(--white); line-height:1.1; margin-bottom:16px;
+  }
+  .reg-hero-title em { color:var(--gold-light); font-weight:400; }
+  .reg-hero-sub { font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.5); font-weight:300; line-height:1.7; margin-bottom:48px; }
+  .reg-steps {
+    display:inline-flex; align-items:center;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(201,168,76,0.22);
+    padding:18px 32px; border-radius:100px; backdrop-filter:blur(10px);
+    flex-wrap:wrap; justify-content:center; gap:0;
+    animation:fadeUp 0.7s 0.2s ease both;
+  }
+  .reg-step { display:flex; align-items:center; gap:10px; }
+  .step-num { font-family:'Cormorant Garamond', serif; font-size:1.1rem; font-weight:600; color:var(--gold-light); }
+  .step-txt { font-size:0.78rem; color:rgba(255,255,255,0.6); white-space:nowrap; }
+  .reg-step-line { width:40px; height:1px; background:rgba(201,168,76,0.3); margin:0 16px; }
+
+  .reg-body {
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:300px 1fr;
+    gap:40px; padding:60px 5vw 80px; align-items:start;
+  }
+  .reg-sidebar { display:flex; flex-direction:column; gap:20px; position:sticky; top:88px; }
+  .reg-info-card { background:var(--white); border:1px solid rgba(0,0,0,0.07); border-radius:20px; padding:28px; box-shadow:0 4px 20px rgba(13,61,44,0.06); }
+  .reg-info-card--gold { background:linear-gradient(135deg, var(--gold-pale), #fff8e8); border-color:var(--border); }
+  .reg-info-icon { font-size:1.8rem; margin-bottom:12px; display:block; }
+  .reg-info-card h3 { font-family:'Cormorant Garamond', serif; font-size:1.2rem; font-weight:600; color:var(--green-deep); margin-bottom:14px; }
+  .reg-req-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .reg-req-list li { display:flex; gap:10px; align-items:center; font-size:0.83rem; color:var(--text-mid); }
+  .reg-req-list li::before { content:'✓'; color:var(--green-mid); font-weight:700; flex-shrink:0; }
+  .reg-schedule { display:flex; flex-direction:column; gap:12px; }
+  .reg-schedule div { display:flex; justify-content:space-between; align-items:center; }
+  .reg-schedule span  { font-size:0.78rem; color:var(--text-light); }
+  .reg-schedule strong{ font-size:0.82rem; color:var(--green-deep); font-weight:600; }
+
+  .reg-form-area { min-width:0; }
+  .form-wrapper {
+    background:var(--white); border-radius:24px; padding:40px;
+    box-shadow:0 20px 60px rgba(201,168,76,0.12), 0 4px 16px rgba(0,0,0,0.06);
+    border:1px solid var(--border);
+  }
+  .google-form-embed { width:100%; border-radius:12px; border:none; min-height:700px; display:block; }
+  .form-note { margin-top:16px; font-size:0.78rem; color:var(--text-light); text-align:center; }
+
+  /* ════════════════════════════════
+     ANIMATIONS
+  ════════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(30px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes bounce {
+    0%,100% { transform:translateX(-50%) translateY(0); }
+    50%     { transform:translateX(-50%) translateY(8px); }
+  }
+  .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s cubic-bezier(0.23,1,0.32,1), transform 0.8s cubic-bezier(0.23,1,0.32,1); }
+  .reveal.visible { opacity:1; transform:none; }
+  .reveal-delay-1 { transition-delay:0.1s; }
+  .reveal-delay-2 { transition-delay:0.2s; }
+  .reveal-delay-3 { transition-delay:0.3s; }
+  .reveal-delay-4 { transition-delay:0.4s; }
+  .reveal-delay-5 { transition-delay:0.5s; }
+
+  /* ════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════ */
+  @media (max-width:1024px) {
+    .profil-inner  { grid-template-columns:1fr; gap:48px; }
+    .profil-badge  { display:none; }
+    .vm-grid       { grid-template-columns:1fr; }
+    .program-grid  { grid-template-columns:repeat(2,1fr); }
+    .kegiatan-grid { grid-template-columns:1fr; }
+    .keg-card.big  { aspect-ratio:16/9; min-height:auto; grid-row:auto; }
+    .reg-body      { grid-template-columns:1fr; }
+    .reg-sidebar   { position:static; }
+  }
+  @media (max-width:768px) {
+    section          { padding:72px 5vw; }
+    .nav-links       { display:none; }
+    .hamburger       { display:flex; }
+    .program-grid    { grid-template-columns:1fr; }
+    .hero-stats      { gap:28px; bottom:32px; }
+    .scroll-hint     { bottom:116px; }
+    .contact-inner   { flex-direction:column; align-items:flex-start; }
+    .form-wrapper    { padding:28px 20px; }
+    .reg-steps       { border-radius:20px; }
+    .reg-step-line   { display:none; }
+    .reg-back        { top:76px; font-size:0.75rem; padding:8px 14px; }
+  }
+  @media (max-width:480px) {
+    .hero-stats { gap:20px; }
+    .stat-num   { font-size:1.5rem; }
+    body        { cursor:auto; }
+    .cursor, .cursor-ring { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ══════════════════════════════════
+     NAVBAR
+══════════════════════════════════ -->
+<nav id="navbar">
+  <a href="#beranda" class="nav-logo" id="logoHome">
+    <div class="nav-logo-icon">🕌</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">MIS An-Nur</span>
+      <span class="nav-logo-sub">Tanjungpinang</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#beranda"  class="nav-anchor">Beranda</a></li>
+    <li><a href="#profil"   class="nav-anchor">Profil</a></li>
+    <li><a href="#visimisi" class="nav-anchor">Visi &amp; Misi</a></li>
+    <li><a href="#program"  class="nav-anchor">Program</a></li>
+    <li><a href="#kegiatan" class="nav-anchor">Kegiatan</a></li>
+    <li><a href="#" class="nav-cta goto-daftar">Daftar Sekarang</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#beranda"  class="m-link">Beranda</a>
+  <a href="#profil"   class="m-link">Profil Sekolah</a>
+  <a href="#visimisi" class="m-link">Visi &amp; Misi</a>
+  <a href="#program"  class="m-link">Program Sekolah</a>
+  <a href="#kegiatan" class="m-link">Kegiatan</a>
+  <a href="#" class="m-cta goto-daftar">✦ Daftar Sekarang</a>
+</div>
+
+<!-- ══════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════ -->
+<div id="landing-page">
+
+  <!-- HERO -->
+  <section id="beranda">
+    <div class="hero-pattern"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-badge">Madrasah Ibtidaiyah Swasta ✦ Tanjungpinang</div>
+    <h1 class="hero-title">
+      Madrasah <em>Islami</em>
+      <span class="title-school">An-Nur</span>
+    </h1>
+    <p class="hero-subtitle">
+      Membentuk generasi <strong>berakhlak mulia, cerdas, &amp; berprestasi</strong><br>
+      di bawah naungan nilai-nilai Islam yang rahmatan lil 'alamin
+    </p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary goto-daftar">✦ Daftar Sekarang</a>
+      <a href="#profil" class="btn-secondary">Kenali Kami →</a>
+    </div>
+    <div class="scroll-hint">
+      <span>Gulir ke Bawah</span>
+      <div class="scroll-line"></div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">15+</span><span class="stat-label">Tahun Berdiri</span></div>
+      <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Alumni</span></div>
+      <div class="stat"><span class="stat-num">98%</span><span class="stat-label">Kelulusan</span></div>
+      <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Tenaga Didik</span></div>
+    </div>
+  </section>
+
+  <!-- PROFIL -->
+  <section id="profil">
+    <div class="profil-inner">
+      <div class="profil-content">
+        <div class="section-label reveal">Profil Sekolah</div>
+        <h2 class="section-title reveal reveal-delay-1">Mengenal<br>MIS An-Nur</h2>
+        <p class="section-body reveal reveal-delay-2">MIS An-Nur Tanjungpinang adalah Madrasah Ibtidaiyah Swasta yang telah berdiri lebih dari satu dekade sebagai lembaga pendidikan Islam terpercaya di Kepulauan Riau. Kami berkomitmen mencetak generasi Qurani yang unggul secara akademis dan mulia dalam akhlak.</p>
+        <div class="profil-items">
+          <div class="profil-item reveal reveal-delay-3">
+            <div class="profil-item-icon">📍</div>
+            <div><h4>Lokasi Strategis</h4><p>Berlokasi di Tanjungpinang, Kepulauan Riau, mudah dijangkau dari berbagai penjuru kota.</p></div>
+          </div>
+          <div class="profil-item reveal reveal-delay-4">
+            <div class="profil-item-icon">🎓</div>
+            <div><h4>Akreditasi Resmi</h4><p>Terakreditasi oleh Kementerian Agama RI dengan standar pendidikan Islam yang berkualitas.</p></div>
+          </div>
+          <div class="profil-item reveal reveal-delay-5">
+            <div class="profil-item-icon">🤝</div>
+            <div><h4>Lingkungan Islami</h4><p>Suasana belajar yang Islami, aman, dan kondusif untuk tumbuh kembang optimal setiap siswa.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="profil-visual reveal reveal-delay-2">
+        <div class="profil-card">
+          <span class="profil-card-icon">🕌</span>
+          <h3>Madrasah Ibtidaiyah Swasta An-Nur</h3>
+          <p>Lembaga pendidikan dasar berbasis Islam yang mengintegrasikan ilmu umum dan agama dalam satu kurikulum terpadu yang komprehensif dan modern.</p>
+          <div class="profil-badge"><span>A</span><span>Akreditasi</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISI MISI -->
+  <section id="visimisi">
+    <div class="visimisi-inner">
+      <div class="visimisi-header">
+        <div class="section-label reveal">Visi &amp; Misi</div>
+        <h2 class="section-title reveal reveal-delay-1">Fondasi Kami<br>dalam Mendidik</h2>
+      </div>
+      <div class="vm-grid">
+        <div class="vm-card reveal reveal-delay-2">
+          <div class="vm-icon">🌟</div>
+          <h3>Visi</h3>
+          <p>Menjadi madrasah ibtidaiyah unggulan yang mencetak generasi <em>Muslim yang berilmu, berakhlak mulia, mandiri, dan berdaya saing global</em> berdasarkan nilai-nilai Al-Qur'an dan As-Sunnah.</p>
+        </div>
+        <div class="vm-card reveal reveal-delay-3">
+          <div class="vm-icon">🎯</div>
+          <h3>Misi</h3>
+          <ul class="vm-misi-list">
+            <li>Menyelenggarakan pendidikan Islam yang berkualitas, holistik, dan berkarakter.</li>
+            <li>Mengintegrasikan ilmu agama dan ilmu umum dalam kurikulum terpadu yang relevan.</li>
+            <li>Membentuk siswa yang hafal Al-Qur'an, berakhlakul karimah, dan berprestasi.</li>
+            <li>Menciptakan lingkungan belajar yang inovatif, aman, dan menyenangkan.</li>
+            <li>Menjalin kemitraan aktif dengan orang tua dan masyarakat dalam mendidik generasi.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAM -->
+  <section id="program">
+    <div class="program-inner">
+      <div class="program-header">
+        <div class="section-label reveal" style="justify-content:center">Program Unggulan</div>
+        <h2 class="section-title reveal reveal-delay-1">Program Sekolah<br>Kami</h2>
+        <p class="section-body reveal reveal-delay-2">Kami menawarkan berbagai program unggulan yang dirancang untuk membentuk siswa yang kompeten secara akademis dan kuat secara spiritual.</p>
+      </div>
+      <div class="program-grid">
+        <div class="prog-card reveal reveal-delay-1"><span class="prog-emoji">📖</span><h3>Tahfidz Al-Qur'an</h3><p>Program hafalan Al-Qur'an dengan metode Talaqqi dan Tasmi' yang teruji, dibimbing ustadz-ustadzah berpengalaman dan bersanad.</p><span class="prog-tag">Program Inti</span></div>
+        <div class="prog-card reveal reveal-delay-2"><span class="prog-emoji">🔬</span><h3>Sains &amp; Teknologi</h3><p>Pembelajaran IPTEK berbasis eksperimen dan project-based learning untuk menumbuhkan jiwa ilmuwan sejak dini.</p><span class="prog-tag">Akademis</span></div>
+        <div class="prog-card reveal reveal-delay-3"><span class="prog-emoji">🌍</span><h3>Bahasa Arab &amp; Inggris</h3><p>Kelas bahasa Arab dan Inggris intensif untuk membentuk siswa yang mampu berkomunikasi global sejak usia dini.</p><span class="prog-tag">Linguistik</span></div>
+        <div class="prog-card reveal reveal-delay-4"><span class="prog-emoji">🎨</span><h3>Seni &amp; Kreativitas</h3><p>Mengembangkan bakat seni, kaligrafi Islam, dan kreativitas siswa melalui kegiatan ekstra yang terstruktur.</p><span class="prog-tag">Ekstrakurikuler</span></div>
+        <div class="prog-card reveal reveal-delay-5"><span class="prog-emoji">⚽</span><h3>Olahraga &amp; Kesehatan</h3><p>Program kebugaran jasmani, senam pagi, dan cabang olahraga pilihan untuk membentuk siswa yang sehat dan aktif.</p><span class="prog-tag">Kesehatan</span></div>
+        <div class="prog-card reveal"><span class="prog-emoji">🤲</span><h3>Pembinaan Karakter</h3><p>Pembentukan akhlak mulia melalui program mentoring, pesantren kilat, dan pembiasaan adab Islami sehari-hari.</p><span class="prog-tag">Karakter</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEGIATAN -->
+  <section id="kegiatan">
+    <div class="kegiatan-inner">
+      <div class="kegiatan-header">
+        <div>
+          <div class="section-label reveal">Kegiatan Sekolah</div>
+          <h2 class="section-title reveal reveal-delay-1">Dinamika<br>Keseharian Kami</h2>
+        </div>
+        <p class="reveal reveal-delay-2" style="max-width:280px;font-size:0.88rem;color:var(--text-light);font-weight:300;line-height:1.7">Berbagai kegiatan seru dan bermakna yang membentuk karakter dan kemampuan siswa An-Nur setiap harinya.</p>
+      </div>
+      <div class="kegiatan-grid">
+        <div class="keg-card big reveal">
+          <div class="keg-bg" style="background:linear-gradient(135deg,#1a5c42,#0d3d2c)">📚</div>
+          <div class="keg-overlay"><div class="keg-tag">✦ Kegiatan Rutin</div><h3>Upacara &amp; Apel Pagi</h3><p>Membangun kedisiplinan dan rasa cinta tanah air melalui rutinitas upacara dan doa pagi bersama.</p></div>
+        </div>
+        <div class="keg-card reveal reveal-delay-1">
+          <div class="keg-bg" style="background:linear-gradient(135deg,#7a5c14,#c9a84c)">🕌</div>
+          <div class="keg-overlay"><div class="keg-tag">✦ Kegiatan Harian</div><h3>Shalat Berjamaah</h3><p>Pembiasaan shalat Dhuha dan Dzuhur berjamaah setiap hari.</p></div>
+        </div>
+        <div class="keg-card reveal reveal-delay-2">
+          <div class="keg-bg" style="background:linear-gradient(135deg,#1a5c42,#2a7a58)">🏆</div>
+          <div class="keg-overlay"><div class="keg-tag">✦ Prestasi</div><h3>Olimpiade &amp; Lomba</h3><p>Aktif mengikuti berbagai kompetisi akademis dan keagamaan tingkat kota hingga provinsi.</p></div>
+        </div>
+        <div class="keg-card reveal reveal-delay-3">
+          <div class="keg-bg" style="background:linear-gradient(135deg,#2d5a1a,#4a8a2a)">🌱</div>
+          <div class="keg-overlay"><div class="keg-tag">✦ Sosial</div><h3>Bakti Sosial</h3><p>Menumbuhkan kepedulian sosial melalui santunan anak yatim dan kegiatan kemasyarakatan.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <div class="contact-strip">
+    <div class="contact-inner">
+      <div class="contact-info">
+        <h3>MIS An-Nur Tanjungpinang</h3>
+        <p>Siap melayani pertanyaan Anda seputar penerimaan siswa baru dan informasi madrasah.</p>
+      </div>
+      <div class="contact-items">
+        <div class="contact-item"><div class="contact-item-icon">📍</div><div class="contact-item-text"><strong>Alamat</strong>Tanjungpinang, Kepulauan Riau</div></div>
+        <div class="contact-item"><div class="contact-item-icon">📞</div><div class="contact-item-text"><strong>Telepon</strong>(0771) XXX-XXXX</div></div>
+        <div class="contact-item"><div class="contact-item-icon">✉️</div><div class="contact-item-text"><strong>Email</strong>info@misannur.sch.id</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">MIS <em>An-Nur</em> Tanjungpinang</div>
+    <div class="footer-copy">© 2025 MIS An-Nur Tanjungpinang · All rights reserved</div>
+  </footer>
+
+</div><!-- /#landing-page -->
+
+<!-- ══════════════════════════════════
+     HALAMAN PENDAFTARAN
+══════════════════════════════════ -->
+<div id="page-pendaftaran">
+
+  <div class="reg-hero">
+    <div class="hero-pattern"></div>
+    <div class="hero-grid"></div>
+    <button class="reg-back" id="btnBack">← Kembali ke Beranda</button>
+    <div class="reg-hero-inner">
+      <div class="hero-badge" style="animation:none;margin-bottom:24px">✦ Penerimaan Siswa Baru 2025 / 2026</div>
+      <h1 class="reg-hero-title">Formulir<br><em>Pendaftaran</em></h1>
+      <p class="reg-hero-sub">Isi data dengan lengkap dan benar. Data Anda tersimpan aman<br>langsung di Google Drive Madrasah kami.</p>
+    </div>
+    <div class="reg-steps">
+      <div class="reg-step"><span class="step-num">01</span><span class="step-txt">Isi Formulir</span></div>
+      <div class="reg-step-line"></div>
+      <div class="reg-step"><span class="step-num">02</span><span class="step-txt">Verifikasi Admin</span></div>
+      <div class="reg-step-line"></div>
+      <div class="reg-step"><span class="step-num">03</span><span class="step-txt">Konfirmasi Diterima</span></div>
+    </div>
+  </div>
+
+  <div class="reg-body">
+    <div class="reg-sidebar">
+      <div class="reg-info-card">
+        <span class="reg-info-icon">📋</span>
+        <h3>Persyaratan Dokumen</h3>
+        <ul class="reg-req-list">
+          <li>Fotokopi Akta Kelahiran</li>
+          <li>Fotokopi Kartu Keluarga</li>
+          <li>Pas foto 3×4 (3 lembar)</li>
+          <li>Surat Keterangan Sehat</li>
+          <li>Ijazah / STTB TK (jika ada)</li>
+        </ul>
+      </div>
+      <div class="reg-info-card reg-info-card--gold">
+        <span class="reg-info-icon">📅</span>
+        <h3>Jadwal Pendaftaran</h3>
+        <div class="reg-schedule">
+          <div><span>Gelombang I</span><strong>Jan – Mar 2025</strong></div>
+          <div><span>Gelombang II</span><strong>Apr – Jun 2025</strong></div>
+          <div><span>Daftar Ulang</span><strong>Jul 2025</strong></div>
+        </div>
+      </div>
+      <div class="reg-info-card">
+        <span class="reg-info-icon">📞</span>
+        <h3>Butuh Bantuan?</h3>
+        <p style="font-size:0.83rem;color:var(--text-light);line-height:1.6;margin-top:8px">Hubungi panitia penerimaan siswa baru kami:</p>
+        <p style="font-size:0.95rem;font-weight:600;color:var(--green-deep);margin-top:10px">(0771) XXX-XXXX</p>
+        <p style="font-size:0.78rem;color:var(--text-light)">Senin – Jumat · 08.00 – 15.00 WIB</p>
+      </div>
+    </div>
+
+    <div class="reg-form-area">
+      <div class="form-wrapper">
+        <!--
+          ══════════════════════════════════════════════════════
+          CARA MEMASANG GOOGLE FORM:
+          1. Buka Google Form pendaftaran madrasah Anda
+          2. Klik tombol "Kirim" (Send) di kanan atas
+          3. Pilih tab ikon "<>" (Embed)
+          4. Salin URL yang ada di dalam src="..."
+          5. Tempel/ganti URL di bawah ini
+
+          Contoh URL Google Form:
+          https://docs.google.com/forms/d/e/1FAIpQLSe.../viewform?embedded=true
+          ══════════════════════════════════════════════════════
+        -->
+        <iframe
+          class="google-form-embed"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSe_GANTI_DENGAN_ID_GOOGLE_FORM_ANDA/viewform?embedded=true"
+          frameborder="0" marginheight="0" marginwidth="0" loading="lazy"
+          title="Formulir Pendaftaran MIS An-Nur Tanjungpinang">
+        </iframe>
+      </div>
+      <div class="form-note">🔒 Data tersimpan aman di Google Drive Madrasah An-Nur · Dilindungi enkripsi Google</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">MIS <em>An-Nur</em> Tanjungpinang</div>
+    <div class="footer-copy">© 2025 MIS An-Nur Tanjungpinang · All rights reserved</div>
+  </footer>
+
+</div><!-- /#page-pendaftaran -->
+
+<script>
+/* ── Custom Cursor ── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursor.style.transform=`translate(${mx-5}px,${my-5}px)`;
+});
+(function loop(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.transform=`translate(${rx-18}px,${ry-18}px)`; requestAnimationFrame(loop); })();
+document.querySelectorAll('a,button,.prog-card,.keg-card,.profil-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+});
+document.addEventListener('mousedown',()=>cursor.classList.add('click'));
+document.addEventListener('mouseup',()=>cursor.classList.remove('click'));
+
+/* ── Refs ── */
+const navbar      = document.getElementById('navbar');
+const landingPage = document.getElementById('landing-page');
+const regPage     = document.getElementById('page-pendaftaran');
+const hamburger   = document.getElementById('hamburger');
+const mobileMenu  = document.getElementById('mobileMenu');
+
+/* ── Page Switching ── */
+function showDaftar(){
+  landingPage.style.display='none';
+  regPage.style.display='block';
+  navbar.classList.remove('scrolled');
+  navbar.classList.add('page-nav');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showLanding(){
+  regPage.style.display='none';
+  landingPage.style.display='block';
+  navbar.classList.remove('page-nav');
+  navbar.classList.toggle('scrolled', window.scrollY>30);
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+/* "Daftar Sekarang" triggers */
+document.querySelectorAll('.goto-daftar').forEach(el=>{
+  el.addEventListener('click', e=>{
+    e.preventDefault();
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    showDaftar();
+  });
+});
+/* Logo → kembali ke landing jika sedang di pendaftaran */
+document.getElementById('logoHome').addEventListener('click', e=>{
+  if(regPage.style.display==='block'){ e.preventDefault(); showLanding(); }
+});
+document.getElementById('btnBack').addEventListener('click', showLanding);
+
+/* ── Scroll → navbar state ── */
+window.addEventListener('scroll',()=>{
+  if(landingPage.style.display!=='none'){
+    navbar.classList.toggle('scrolled', window.scrollY>30);
+  }
+});
+
+/* ── Hamburger ── */
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+document.querySelectorAll('.m-link').forEach(l=>l.addEventListener('click',()=>{
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}));
+
+/* ── Scroll Reveal ── */
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── Number Counter ── */
+function counter(el,target,sfx=''){
+  const dur=1800, t0=performance.now();
+  (function tick(now){
+    const p=Math.min((now-t0)/dur,1);
+    el.textContent=Math.round((1-Math.pow(1-p,3))*target)+sfx;
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+const so=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const n=document.querySelectorAll('.stat-num');
+      [[n[0],15,'+'],[n[1],500,'+'],[n[2],98,'%'],[n[3],30,'+']].forEach(
+        ([el,v,s])=>el&&counter(el,v,s));
+      so.disconnect();
+    }
+  });
+},{threshold:0.5});
+const hs=document.querySelector('.hero-stats');
+if(hs) so.observe(hs);
+</script>
+</body>
+</html>
