@@ -75,7 +75,7 @@
     color:var(--gold-light); transition:color 0.4s;  /* pale gold on hero */
   }
   /* Links — white on hero */
-  .nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+  .nav-links { display:flex; align-items:center; gap:28px; list-style:none; }
   .nav-links a {
     font-size:0.82rem; font-weight:500; letter-spacing:0.04em;
     color:rgba(255,255,255,0.85); text-decoration:none;
@@ -363,6 +363,74 @@
   .keg-overlay p  { font-size:0.8rem; color:rgba(255,255,255,0.6); font-weight:300; line-height:1.5; }
 
   /* ════════════════════════════════
+     GURU & STAF
+  ════════════════════════════════ */
+  #guru { background:var(--off-white); }
+  .guru-inner { max-width:1200px; margin:0 auto; }
+  .guru-header { text-align:center; margin-bottom:64px; }
+  .guru-header .section-label { justify-content:center; }
+  .guru-kepsek { display:flex; justify-content:center; margin-bottom:40px; }
+  .guru-card {
+    background:var(--white); border:1px solid var(--border);
+    border-radius:20px; padding:32px 24px; text-align:center;
+    transition:transform 0.4s, box-shadow 0.4s;
+  }
+  .guru-card:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(13,61,44,0.08); }
+  .guru-kepsek .guru-card {
+    width:100%; max-width:400px;
+    border-color:var(--gold); box-shadow:var(--shadow-gold);
+    background:linear-gradient(180deg, var(--white) 0%, var(--gold-pale) 100%);
+  }
+  .guru-slider-controls {
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    margin-bottom:24px;
+  }
+  .slider-btn {
+    width:44px; height:44px; border-radius:50%;
+    background:var(--white); border:1px solid var(--border);
+    color:var(--green-deep); font-size:1.2rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.3s ease; box-shadow:0 4px 12px rgba(13,61,44,0.05);
+  }
+  .slider-btn:hover {
+    background:var(--gold); color:var(--white); border-color:var(--gold);
+    transform:translateY(-2px); box-shadow:0 8px 20px rgba(201,168,76,0.3);
+  }
+  .guru-scroll-hint {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    font-size:0.75rem; color:var(--gold); font-weight:600; letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+  .guru-scroll-hint::before, .guru-scroll-hint::after {
+    content:''; width:30px; height:1px; background:rgba(201,168,76,0.5);
+  }
+  .guru-slider {
+    display:flex; gap:24px; overflow-x:auto; padding:20px 5vw 40px; margin:0 -5vw;
+    scrollbar-width:none; -ms-overflow-style:none; cursor:grab;
+    scroll-snap-type:x mandatory;
+  }
+  .guru-slider::-webkit-scrollbar { display:none; }
+  .guru-slider:active { cursor:grabbing; scroll-snap-type:none; }
+  .guru-slider .guru-card {
+    flex:0 0 280px; scroll-snap-align:center;
+  }
+  .guru-avatar {
+    width:90px; height:90px; margin:0 auto 20px; border-radius:50%;
+    background:linear-gradient(135deg, var(--green-subtle), #d1e5dc);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.8rem; color:var(--green-deep); font-weight:600;
+    border:4px solid var(--white); box-shadow:0 8px 20px rgba(0,0,0,0.05);
+  }
+  .guru-kepsek .guru-avatar {
+    width:120px; height:120px; font-size:2.5rem;
+    background:linear-gradient(135deg, var(--gold-light), var(--gold));
+    color:var(--white);
+  }
+  .guru-name { font-family:'Cormorant Garamond', serif; font-size:1.25rem; font-weight:700; color:var(--green-deep); margin-bottom:4px; }
+  .guru-role { font-size:0.75rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+  .guru-desc { font-size:0.85rem; color:var(--text-light); line-height:1.5; font-weight:300; }
+
+  /* ════════════════════════════════
      CONTACT + FOOTER
   ════════════════════════════════ */
   .contact-strip { background:var(--green-deep); padding:48px 5vw; }
@@ -522,6 +590,7 @@
     <li><a href="#visimisi" class="nav-anchor">Visi &amp; Misi</a></li>
     <li><a href="#program"  class="nav-anchor">Program</a></li>
     <li><a href="#kegiatan" class="nav-anchor">Kegiatan</a></li>
+    <li><a href="#guru"     class="nav-anchor">Guru</a></li>
     <li><a href="#" class="nav-cta goto-daftar">Daftar Sekarang</a></li>
   </ul>
   <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
@@ -534,6 +603,7 @@
   <a href="#visimisi" class="m-link">Visi &amp; Misi</a>
   <a href="#program"  class="m-link">Program Sekolah</a>
   <a href="#kegiatan" class="m-link">Kegiatan</a>
+  <a href="#guru"     class="m-link">Dewan Guru</a>
   <a href="#" class="m-cta goto-daftar">✦ Daftar Sekarang</a>
 </div>
 
@@ -682,6 +752,108 @@
     </div>
   </section>
 
+  <!-- GURU & STAF -->
+  <section id="guru">
+    <div class="guru-inner">
+      <div class="guru-header">
+        <div class="section-label reveal">Tenaga Pendidik</div>
+        <h2 class="section-title reveal reveal-delay-1">Dewan Guru &amp; Staf</h2>
+        <p class="section-body reveal reveal-delay-2" style="margin:0 auto">Dibimbing oleh tenaga pendidik profesional, berdedikasi tinggi, dan kompeten di bidangnya masing-masing.</p>
+      </div>
+
+      <!-- Kepala Sekolah -->
+      <div class="guru-kepsek reveal">
+        <div class="guru-card">
+          <div class="guru-avatar">AF</div>
+          <h3 class="guru-name">Ust. H. Ahmad Fadhil, M.Pd.I</h3>
+          <div class="guru-role">Kepala Madrasah</div>
+          <p class="guru-desc">Mendedikasikan ilmu dan pengalamannya untuk membawa MIS An-Nur menjadi madrasah unggulan di Kepulauan Riau.</p>
+        </div>
+      </div>
+
+      <!-- Slider 12 Guru -->
+      <div class="guru-slider-controls reveal">
+        <button class="slider-btn" id="btnPrev" aria-label="Geser Kiri">←</button>
+        <div class="guru-scroll-hint">Geser Ke Samping</div>
+        <button class="slider-btn" id="btnNext" aria-label="Geser Kanan">→</button>
+      </div>
+      <div class="guru-slider reveal reveal-delay-1" id="guruSlider">
+        <div class="guru-card">
+          <div class="guru-avatar">SA</div>
+          <h3 class="guru-name">Siti Aisyah, S.Pd</h3>
+          <div class="guru-role">Wali Kelas 1</div>
+          <p class="guru-desc">Membimbing pondasi awal anak dengan penuh kesabaran dan kasih sayang.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">BS</div>
+          <h3 class="guru-name">Budi Santoso, S.Pd.I</h3>
+          <div class="guru-role">Wali Kelas 2</div>
+          <p class="guru-desc">Mengajarkan kemandirian dan adab dasar dengan metode interaktif.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">NH</div>
+          <h3 class="guru-name">Nurul Huda, S.Pd</h3>
+          <div class="guru-role">Wali Kelas 3</div>
+          <p class="guru-desc">Fokus pada pengembangan literasi dan numerasi peserta didik.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">RH</div>
+          <h3 class="guru-name">Rahman Hakim, S.Pd</h3>
+          <div class="guru-role">Wali Kelas 4</div>
+          <p class="guru-desc">Mendorong siswa untuk lebih aktif dan berani mengekspresikan diri.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">FT</div>
+          <h3 class="guru-name">Fitriani, S.Pd</h3>
+          <div class="guru-role">Wali Kelas 5</div>
+          <p class="guru-desc">Menyiapkan kemampuan analitis dan semangat eksplorasi siswa.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">AM</div>
+          <h3 class="guru-name">Abdul Malik, S.Pd.I</h3>
+          <div class="guru-role">Wali Kelas 6</div>
+          <p class="guru-desc">Membekali mental dan ilmu untuk kelulusan serta jenjang berikutnya.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">ZL</div>
+          <h3 class="guru-name">Ust. Zulkifli, Lc</h3>
+          <div class="guru-role">Guru Tahfidz</div>
+          <p class="guru-desc">Membina bacaan dan hafalan Al-Qur'an dengan standar sanad yang jelas.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">KH</div>
+          <h3 class="guru-name">Khadijah, S.Ag</h3>
+          <div class="guru-role">Guru PAI</div>
+          <p class="guru-desc">Menanamkan nilai-nilai akidah, akhlak, dan fiqih keseharian.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">IA</div>
+          <h3 class="guru-name">Ilham Akbar, S.Or</h3>
+          <div class="guru-role">Guru PJOK</div>
+          <p class="guru-desc">Mengembangkan motorik dan kebugaran fisik siswa yang sportif.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">RM</div>
+          <h3 class="guru-name">Rina Melati, S.Pd</h3>
+          <div class="guru-role">Guru Bhs Inggris</div>
+          <p class="guru-desc">Melatih kemampuan bahasa global untuk komunikasi masa depan.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">FC</div>
+          <h3 class="guru-name">Faisal Tanjung, S.Kom</h3>
+          <div class="guru-role">Guru TIK</div>
+          <p class="guru-desc">Memperkenalkan teknologi dan pemanfaatan digital yang positif.</p>
+        </div>
+        <div class="guru-card">
+          <div class="guru-avatar">DS</div>
+          <h3 class="guru-name">Dewi Sartika, S.Pd</h3>
+          <div class="guru-role">Guru Seni Budaya</div>
+          <p class="guru-desc">Menumbuhkan bakat seni dan kreativitas keterampilan siswa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <div class="contact-strip">
     <div class="contact-inner">
@@ -761,19 +933,6 @@
 
     <div class="reg-form-area">
       <div class="form-wrapper">
-        <!--
-          ══════════════════════════════════════════════════════
-          CARA MEMASANG GOOGLE FORM:
-          1. Buka Google Form pendaftaran madrasah Anda
-          2. Klik tombol "Kirim" (Send) di kanan atas
-          3. Pilih tab ikon "<>" (Embed)
-          4. Salin URL yang ada di dalam src="..."
-          5. Tempel/ganti URL di bawah ini
-
-          Contoh URL Google Form:
-          https://docs.google.com/forms/d/e/1FAIpQLSe.../viewform?embedded=true
-          ══════════════════════════════════════════════════════
-        -->
         <iframe
           class="google-form-embed"
           src="https://docs.google.com/forms/d/e/1FAIpQLSe_GANTI_DENGAN_ID_GOOGLE_FORM_ANDA/viewform?embedded=true"
@@ -802,7 +961,7 @@ document.addEventListener('mousemove', e => {
   cursor.style.transform=`translate(${mx-5}px,${my-5}px)`;
 });
 (function loop(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.transform=`translate(${rx-18}px,${ry-18}px)`; requestAnimationFrame(loop); })();
-document.querySelectorAll('a,button,.prog-card,.keg-card,.profil-item').forEach(el=>{
+document.querySelectorAll('a,button,.prog-card,.keg-card,.profil-item,.guru-card').forEach(el=>{
   el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
   el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
 });
@@ -891,6 +1050,77 @@ const so=new IntersectionObserver(entries=>{
 },{threshold:0.5});
 const hs=document.querySelector('.hero-stats');
 if(hs) so.observe(hs);
+
+/* ── Drag to Scroll for Guru Slider ── */
+const slider = document.getElementById('guruSlider');
+let isDown = false;
+let startX;
+let scrollLeft;
+
+if(slider){
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+  });
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+  });
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 2; // Kecepatan scroll (geser)
+    slider.scrollLeft = scrollLeft - walk;
+  });
+
+  /* Tombol Navigasi Kiri & Kanan dengan Animasi Custom (Fluid) */
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const scrollAmount = 304; /* Lebar kartu 280px + gap 24px */
+  
+  // Fungsi animasi custom agar efek meluncur lebih organik
+  function fluidScroll(element, distance, duration) {
+    // Matikan efek snap native sementara agar tidak bentrok dengan animasi JS
+    element.style.scrollSnapType = 'none';
+    
+    const start = element.scrollLeft;
+    const startTime = performance.now();
+
+    // Kurva animasi (easeOutQuart) - mulai cepat, melambat di akhir
+    function easeOutQuart(t) {
+      return 1 - Math.pow(1 - t, 4);
+    }
+
+    function step(currentTime) {
+      const timeElapsed = currentTime - startTime;
+      let progress = timeElapsed / duration;
+      if (progress > 1) progress = 1;
+
+      element.scrollLeft = start + (distance * easeOutQuart(progress));
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(step);
+      } else {
+        // Nyalakan kembali snap setelah animasi selesai
+        element.style.scrollSnapType = 'x mandatory';
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  
+  if(btnPrev && btnNext) {
+    btnPrev.addEventListener('click', () => {
+      fluidScroll(slider, -scrollAmount, 600); // 600ms = kecepatan animasi
+    });
+    btnNext.addEventListener('click', () => {
+      fluidScroll(slider, scrollAmount, 600);
+    });
+  }
+}
 </script>
 </body>
 </html>
